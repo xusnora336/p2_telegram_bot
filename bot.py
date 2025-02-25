@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, F
 from keyboards import register_inl_btn, get_phone_btn
 from states import UserRegisterState
-
+from database import db
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -79,13 +79,13 @@ async def get_age(msg: types.Message, state: FSMContext):
 async def get_address(msg: types.Message, state: FSMContext):
     await state.update_data(address=msg.text)
     data = await state.get_data()
-    text = (f"Ism: {data['full_name']}\n"
-            f"Telefon: {data['phone_number']}\n"
-            f"Yosh:{data["age"]}\n"
-            f"Address:{data["address"]}")
-    await msg.answer(text)
+    full_name=data["full_name"]
+    phone_number=data["phone number"]
+    age=data["age"]
+    address=data["address"]
+    db.add_to_users(full_name, phone_number, age, address)
+    await msg.answer("Ma'lumotlaringiz saqlandi")
     await state.clear()
-
 
 async def main():
     print("Starting...")
